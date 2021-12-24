@@ -16,7 +16,6 @@ df['time'] = pd.to_datetime(df['time'])
 df.sort_values(by='time', ascending=True, inplace=True)
 df.info()
 df.set_index('time', inplace=True)
-print(df.head())
 
 # fig = plt.figure(figsize=(9,5))
 # ax = fig.add_axes([0,0,1,1])  # 전체 figure 전부 활용
@@ -25,6 +24,8 @@ print(df.head())
 
 scaler = MinMaxScaler()
 scaled_data = scaler.fit_transform(df)
+print(scaled_data[:5])
+print(scaled_data.shape)
 scaled_data = pd.DataFrame(scaled_data, columns = df.columns, index=df.index)
 print(type(scaled_data))
 print(scaled_data.head())
