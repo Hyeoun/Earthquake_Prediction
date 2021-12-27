@@ -24,17 +24,17 @@ right_up = scaler.transform([[up, right, 1, 1, 1, 1]])  # 우, 상 좌표
 left_down = list(left_down[0])
 right_up = list(right_up[0])
 
-df_jp = scaled_df[(left_down[1] <= scaled_df['longitude']) & (scaled_df['longitude'] <= right_up[1]) & (left_down[0] <= scaled_df['latitude']) & (scaled_df['latitude'] <= right_up[0])]
-data_jp = df_jp.to_numpy()
-print(data_jp[:5])
-print(data_jp.shape)
+df_location = scaled_df[(left_down[1] <= scaled_df['longitude']) & (scaled_df['longitude'] <= right_up[1]) & (left_down[0] <= scaled_df['latitude']) & (scaled_df['latitude'] <= right_up[0])]
+data_location = df_location.to_numpy()
+print(data_location[:5])
+print(data_location.shape)
 
 sequence_X = []
 sequence_Y = []
 term = 300
-for i in range(len(data_jp) - term):
-    x = data_jp[i:i+term]
-    y = data_jp[i+term]
+for i in range(len(data_location) - term):
+    x = data_location[i:i+term]
+    y = data_location[i+term]
     sequence_X.append(x)
     sequence_Y.append(y)
     if i is 0:

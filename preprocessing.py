@@ -6,7 +6,7 @@ df = pd.read_csv('./datasets/earthquake_filter_use_data.csv')
 df.info()
 
 df['depth'].fillna(df['depth'].mean(), inplace=True)
-df['gap'].fillna(400, inplace=True)
+df['gap'].fillna(500, inplace=True)
 df['rms'].fillna(0, inplace=True)
 
 print(df['latitude'].describe())
