@@ -31,7 +31,7 @@ print(data_jp.shape)
 
 sequence_X = []
 sequence_Y = []
-term = 100
+term = 300
 for i in range(len(data_jp) - term):
     x = data_jp[i:i+term]
     y = data_jp[i+term]
@@ -47,4 +47,4 @@ X_train, X_test, Y_train, Y_test = train_test_split(sequence_X, sequence_Y, test
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 xy = X_train, X_test, Y_train, Y_test
-np.save('./datasets/earthquake_preprocessed_(X_{}-{},Y_{}-{}).npy'.format(left, right, down, up), xy)
+np.save('./datasets/earthquake_preprocessed_(X_{}~{},Y_{}~{},T_{}).npy'.format(left, right, down, up, term), xy)
