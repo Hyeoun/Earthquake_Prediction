@@ -17,7 +17,7 @@ with open('./datasets/earthquake_minmaxscaler.pickle', 'rb') as f:
   scaler = pickle.load(f)
 
 # N = +, S = -, W = -, E = +
-up, down, left, right = 43, 32, 136, 148
+up, down, left, right = -60, -90, -180, -150
 left_down = scaler.transform([[down, left, 1, 1, 1, 1]])  # 좌, 하 좌표
 right_up = scaler.transform([[up, right, 1, 1, 1, 1]])  # 우, 상 좌표
 
@@ -31,7 +31,7 @@ print(data_location.shape)
 
 sequence_X = []
 sequence_Y = []
-term = 300
+term = 100
 for i in range(len(data_location) - term):
     x = data_location[i:i+term]
     y = data_location[i+term]
@@ -43,7 +43,7 @@ for i in range(len(data_location) - term):
 sequence_X = np.array(sequence_X)
 sequence_Y = np.array(sequence_Y)
 
-X_train, X_test, Y_train, Y_test = train_test_split(sequence_X, sequence_Y, test_size=0.2)
+X_train, X_test, Y_train, Y_test = train_test_split(sequence_X, sequence_Y, test_size=0.01)
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 xy = X_train, X_test, Y_train, Y_test
