@@ -31,7 +31,6 @@ for a in range(len(row)-1):
 
             df_location = scaled_df[(left_down[1] <= scaled_df['longitude']) & (scaled_df['longitude'] <= right_up[1]) & (left_down[0] <= scaled_df['latitude']) & (scaled_df['latitude'] <= right_up[0])]
             data_location = df_location.to_numpy()
-            print(data_location[:5])
             print(data_location.shape)
 
             sequence_X = []
@@ -42,8 +41,6 @@ for a in range(len(row)-1):
                 y = data_location[i+term]
                 sequence_X.append(x)
                 sequence_Y.append(y)
-                if i is 0:
-                    print(x, '->', y)
 
             sequence_X = np.array(sequence_X)
             sequence_Y = np.array(sequence_Y)
@@ -52,6 +49,7 @@ for a in range(len(row)-1):
             print(X_train.shape, Y_train.shape)
             print(X_test.shape, Y_test.shape)
             xy = X_train, X_test, Y_train, Y_test
-            np.save('./datasets/earthquake_preprocessed_(X_{}~{},Y_{}~{},T_{}).npy'.format(left, right, down, up, term), xy)
+            np.save('./datasets/location_pre/earthquake_preprocessed_(X_{}~{},Y_{}~{}).npy'.format(left, right, down, up), xy)
+            print('X_{}~{},Y_{}~{}, 저장 성공'.format(left, right, down, up))
         except:
             print('X_{}~{},Y_{}~{}, 표본이 부족한 구역입니다.'.format(left, right, down, up))
