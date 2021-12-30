@@ -69,8 +69,9 @@ class Exam(QMainWindow, form_window):
     def map_location_pick(self):
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
-        btn = int((((self.sender()).objectName()).split('_'))[1])
+        btn = (((self.sender()).objectName()).split('_'))[1]
         pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(btn))
+        btn = int(btn)
 
         self.lbl_partmap.show()
         self.lbl_partmap.setPixmap(pm)
@@ -116,14 +117,14 @@ class Exam(QMainWindow, form_window):
                 time.sleep(t)
                 co = int(((driver.find_element_by_xpath(count_xpath).text).split())[0])
                 # 크롤링 여부 판단
-                if co >= 200:
+                if co >= 150:
                     driver.find_element_by_xpath('/html/body/usgs-root/div/usgs-list/cdk-virtual-scroll-viewport/div[1]/usgs-download-button/div/button').send_keys(Keys.ENTER)
                     time.sleep(0.2)
                     down_url = driver.find_element_by_xpath('//*[@id="mat-dialog-0"]/usgs-download-options/div[1]/ul/li[1]/a').get_attribute('href')
                     driver.get(down_url)
                     time.sleep(0.2)
                     return True
-                elif 200 > co >= 100: de += 90
+                elif 150 > co >= 100: de += 90
                 elif 100 > co >= 40: de += 150
                 elif 40 > co >= 10:
                     de += 210
@@ -166,16 +167,12 @@ class Exam(QMainWindow, form_window):
         qt_mx = round((310 / 30) * (X - self.loc_left) - qt_cs / 2, 0)
         qt_my = round((401 / 30) * (self.loc_up - Y) - qt_cs / 2, 0)
         print(X, Y)
-        self.lbl_result.setText('다음 지진은 위도 {}, 경도 {}, 깊이{}km 지점에 진도 {}이(가) 예상됩니다.\n(북위:+, 남위:-, 서경:-, 동경:+)'.format(round(Y, 2), round(X, 2), round(next_eq_pred[2], 2), round(M, 1)))
+        self.lbl_result.setText('다음 지진은 위도 {}, 경도 {}, 깊이{}km 지점에 진도 {}이(가) 예상됩니다.\n(북위 : +, 남위 : -, 서경 : -, 동경 : +)'.format(round(Y, 2), round(X, 2), round(next_eq_pred[2], 2), round(M, 1)))
         self.lbl_status.setText('예측 완료')
         self.lbl_reddot.show()
         self.lbl_reddot.move(185 + qt_mx, 20 + qt_my)
         self.lbl_reddot.setFixedSize(qt_cs, qt_cs)
         [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
-
-    def calc_loc(self, X, Y, qt_cs):
-        qt_mx = round((310 / 30) * (X - self.loc_left) - qt_cs / 2, 0)
-        qt_my = round((401 / 30) * (self.loc_up - Y) - qt_cs / 2, 0)
 
     def closeEvent(self, QCloseEvent):
         ans = QMessageBox.question(self, '종료', '종료할까요?', QMessageBox.No | QMessageBox.Yes, QMessageBox.Yes)
@@ -189,40 +186,40 @@ class Exam(QMainWindow, form_window):
         for i in self.btn_split_map_list:
             i.hide()
 
-    def Loading(self):
-        # 로딩중일때 다시 클릭하는 경우
-        try:
-            self.loading
-            self.loading.deleteLater()
-
-        # 처음 클릭하는 경우
-        except:
-            self.loading = loading(self)
+    # def Loading(self):
+    #     # 로딩중일때 다시 클릭하는 경우
+    #     try:
+    #         self.loading
+    #         self.loading.deleteLater()
+    #
+    #     # 처음 클릭하는 경우
+    #     except:
+    #         self.loading = loading(self)
 
 # Loading Img
-class loading(QWidget, form_loading):
-
-    def __init__(self, parent):
-        super(loading, self).__init__(parent)
-        self.setupUi(self)
-        self.center()
-        self.show()
-
-        # 동적 이미지 추가
-        self.movie = QMovie('./gui/Infinity.gif', QByteArray(), self)
-        self.movie.setCacheMode(QMovie.CacheAll)
-        # QLabel에 동적 이미지 삽입
-        self.lbl_load.setMovie(self.movie)
-        self.movie.start()
-        # 윈도우 해더 숨기기
-        self.setWindowFlags(Qt.FramelessWindowHint)
-
-    # 위젯 정중앙 위치
-    def center(self):
-        size = self.size()
-        ph = 629
-        pw = 817
-        self.move(int(pw - size.width() - 20), int(ph - size.height() - 23))
+# class loading(QWidget, form_loading):
+#
+#     def __init__(self, parent):
+#         super(loading, self).__init__(parent)
+#         self.setupUi(self)
+#         self.center()
+#         self.show()
+#
+#         # 동적 이미지 추가
+#         self.movie = QMovie('./gui/Infinity.gif', QByteArray(), self)
+#         self.movie.setCacheMode(QMovie.CacheAll)
+#         # QLabel에 동적 이미지 삽입
+#         self.lbl_load.setMovie(self.movie)
+#         self.movie.start()
+#         # 윈도우 해더 숨기기
+#         self.setWindowFlags(Qt.FramelessWindowHint)
+#
+#     # 위젯 정중앙 위치
+#     def center(self):
+#         size = self.size()
+#         ph = 629
+#         pw = 817
+#         self.move(int(pw - size.width() - 20), int(ph - size.height() - 23))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
