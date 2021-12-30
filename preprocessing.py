@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
 import pickle
 
 df = pd.read_csv('./datasets/earthquake_filter_use_data.csv')
@@ -17,7 +18,7 @@ df.sort_values(by='time', ascending=True, inplace=True)
 df.info()
 df.set_index('time', inplace=True)
 
-# fig = plt.figure(figsize=(9,5))
+# fig = plt.figure(figsize=(7.44,4))
 # ax = fig.add_axes([0,0,1,1])  # 전체 figure 전부 활용
 # ax.plot(df['longitude'], df['latitude'], '.', markersize=0.7, alpha=0.3, color='#ff5555')
 # plt.show()
