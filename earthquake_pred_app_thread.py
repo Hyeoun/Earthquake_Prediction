@@ -37,6 +37,7 @@ class start_crawling(QThread):
             self.parent.btn_startpred.hide()
         self.parent.status_num = 6
         self.parent.lbl_load.hide()
+        self.parent.activate_butten(True)
 
 class run_status(QThread):
     def __init__(self, parent):
@@ -142,7 +143,7 @@ class Exam(QMainWindow, form_window):
         self.Run_status.start()
 
     def go_home(self):
-        self.lbl_result.setText('Earthquake_prediction_2.2_ver')
+        self.lbl_result.setText('Earthquake_prediction_2.3_ver')
         self.status_num = 0
         self.hide_btn()
         self.btn_back.hide()
@@ -163,6 +164,7 @@ class Exam(QMainWindow, form_window):
         self.btn_back.show()
 
     def map_location_pick(self):
+        self.activate_butten(False)
         self.lbl_result.setText('검색중..')
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
@@ -227,6 +229,7 @@ class Exam(QMainWindow, form_window):
         return False
 
     def preprocessing(self):
+        self.activate_butten(False)
         self.load_logo('Infinity')
         thread_model = start_model(self)
         thread_model.start()
@@ -252,6 +255,12 @@ class Exam(QMainWindow, form_window):
         [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
         self.status_num = 5
         self.lbl_load.hide()
+        self.activate_butten(True)
+
+    def activate_butten(self, switch):
+        btn_list = [self.btn_back, self.btn_readypred, self.btn_startpred]
+        for i in btn_list:
+            i.setEnabled(switch)
 
     def closeEvent(self, QCloseEvent):
         ans = QMessageBox.question(self, '종료', '종료할까요?', QMessageBox.No | QMessageBox.Yes, QMessageBox.Yes)
