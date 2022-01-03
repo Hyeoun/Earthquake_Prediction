@@ -201,8 +201,8 @@ class Exam(QMainWindow, form_window):
         count_xpath = '/html/body/usgs-root/div/usgs-list/cdk-virtual-scroll-viewport/div[1]/usgs-search-results/div/span'
         ed_time = datetime.now()
         e_t = ed_time.strftime('%Y-%m-%d')
-        de = 30
-        t = 3
+        de = 60
+        t = 4
         try:
             while True:
                 st_time = (ed_time + timedelta(days=-de)).strftime('%Y-%m-%d')
@@ -223,7 +223,7 @@ class Exam(QMainWindow, form_window):
                 elif 100 > co >= 40: de += 150
                 elif 40 > co >= 10:
                     de += 210
-                    t = 5
+                    t = 6
                 else: return False
         except: print('crawling error')
         return False
