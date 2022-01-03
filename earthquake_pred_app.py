@@ -167,7 +167,7 @@ class Exam(QMainWindow, form_window):
         qt_mx = round((310 / 30) * (X - self.loc_left) - qt_cs / 2, 0)
         qt_my = round((401 / 30) * (self.loc_up - Y) - qt_cs / 2, 0)
         print(X, Y)
-        self.lbl_result.setText('다음 지진은 위도 {}, 경도 {}, 깊이{}km 지점에 진도 {}이(가) 예상됩니다.\n(북위 : +, 남위 : -, 서경 : -, 동경 : +)'.format(round(Y, 2), round(X, 2), round(next_eq_pred[2], 2), round(M, 1)))
+        self.lbl_result.setText('다음 지진은 위도 {}, 경도 {}, 깊이 {}km 지점에 규모 {}이(가) 예상됩니다.\n(북위 : +, 남위 : -, 서경 : -, 동경 : +)'.format(round(Y, 2), round(X, 2), round(next_eq_pred[2], 2), round(M, 1)))
         self.lbl_status.setText('예측 완료')
         self.lbl_reddot.show()
         self.lbl_reddot.move(185 + qt_mx, 20 + qt_my)
