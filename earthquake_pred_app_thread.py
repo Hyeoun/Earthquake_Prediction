@@ -29,9 +29,9 @@ class start_crawling(QThread):
     def run(self):
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
-        btn = (((self.parent.sender()).objectName()).split('_'))[1]
-        pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(btn))
-        btn = int(btn)
+        print('debug')
+        pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(self.parent.btn))
+        btn = int(self.parent.btn)
 
         self.parent.lbl_partmap.show()
         self.parent.lbl_partmap.setPixmap(pm)
@@ -49,7 +49,6 @@ class start_crawling(QThread):
         self.parent.model_loc = ''
         for i in self.parent.model_data:
             if loc in i:
-                print(i)
                 self.parent.model_loc = i
                 if self.parent.crawling_recent_data(self.parent.loc_up, self.parent.loc_up - 30, self.parent.loc_left, self.parent.loc_left + 30):
                     self.parent.lbl_result.setText(loc + ' 위치의 모델과 자료를 찾았습니다.')
@@ -60,6 +59,7 @@ class start_crawling(QThread):
         if self.parent.model_loc == '':
             self.parent.lbl_result.setText(loc + ' 위치의 표본이 부족하여 모델이 존재하지 않습니다.')
             self.parent.btn_startpred.hide()
+        print('check')
         self.parent.status_num = 6
         self.parent.lbl_load.hide()
         self.parent.activate_butten(True)
@@ -181,7 +181,6 @@ class Exam(QMainWindow, form_window):
         [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
 
     def ready_pred(self):
-        print(self.model_data)
         self.lbl_result.setText('예측 위치를 정해주세요')
         self.status_num = 1
         for i in self.btn_split_map_list:
@@ -192,6 +191,7 @@ class Exam(QMainWindow, form_window):
         self.activate_butten(False)
         self.lbl_result.setText('검색중..')
         self.load_logo('Bean_Eater')
+        self.btn = (((self.sender()).objectName()).split('_'))[1]
         Start_crawling = start_crawling(self)
         Start_crawling.start()
 
