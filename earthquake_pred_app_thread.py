@@ -29,7 +29,7 @@ class start_crawling(QThread):
     def run(self):
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
-        print('debug')
+        print(self.parent.btn)
         pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(self.parent.btn))
         btn = int(self.parent.btn)
 
@@ -79,7 +79,6 @@ class run_status(QThread):
             elif self.parent.status_num == 4: self.status_str = 'Model run..'
             elif self.parent.status_num == 5: self.status_str = 'Prediction done'
             elif self.parent.status_num == 6: self.status_str = 'Crawling and model search completed'
-            elif self.parent.status_num == 7: self.status_str = 'Preprocessing completed'
             if self.parent.status_num in [2, 4]:
                 if self.parent.time_counter == 1: self.status_str = self.status_str + '..'
                 elif self.parent.time_counter == 2: self.status_str = self.status_str + '....'
@@ -132,13 +131,13 @@ class start_model(QThread):
         df = df[-100:]
         scaled_data = self.parent.scaler.transform(df)
         scaled_data = np.array(scaled_data)
-        self.parent.status_num = 7
         self.parent.model_class(scaled_data)
 
 class Exam(QMainWindow, form_window):
     def __init__(self): # 버튼 누르는 함수 처리해 주는 곳
         super().__init__()
         self.setupUi(self)
+        self.setWindowTitle('Earthquake_prediction_2.3_ver')
         self.btn_split_map_list = [self.btn_01, self.btn_02, self.btn_03, self.btn_04, self.btn_05, self.btn_06, self.btn_07, self.btn_08, self.btn_09, self.btn_10,
                               self.btn_11, self.btn_12, self.btn_13, self.btn_14, self.btn_15, self.btn_16, self.btn_17, self.btn_18, self.btn_19, self.btn_20,
                               self.btn_21, self.btn_22, self.btn_23, self.btn_24, self.btn_25, self.btn_26, self.btn_27, self.btn_28, self.btn_29, self.btn_30,
@@ -189,7 +188,7 @@ class Exam(QMainWindow, form_window):
 
     def map_location_pick(self):
         self.activate_butten(False)
-        self.lbl_result.setText('검색중..')
+        self.lbl_result.setText('모델 검색중..')
         self.load_logo('Bean_Eater')
         self.btn = (((self.sender()).objectName()).split('_'))[1]
         Start_crawling = start_crawling(self)
@@ -202,6 +201,7 @@ class Exam(QMainWindow, form_window):
         e_t = ed_time.strftime('%Y-%m-%d')
         de = 60
         t = 4
+        self.lbl_result.setText('크롤러가 자료를 수집하고 있습니다.')
         try:
             while True:
                 st_time = (ed_time + timedelta(days=-de)).strftime('%Y-%m-%d')
