@@ -27,13 +27,38 @@ class start_crawling(QThread):
         super().__init__(parent)
         self.parent = parent
     def run(self):
-        if self.parent.crawling_recent_data(self.parent.loc_up, self.parent.loc_up - 30, self.parent.loc_left, self.parent.loc_left + 30):
-            self.parent.lbl_result.setText(self.parent.loc + ' 위치의 모델과 자료를 찾았습니다.')
-        else:
-            self.parent.lbl_result.setText(self.parent.loc + ' 위치의 모델은 존재하지만 충분한 최근 데이터가 부족합니다.')
-            self.parent.btn_startpred.hide()
+        row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
+        col = [90, 60, 30, 0, -30, -60, -90]
+        btn = (((self.parent.sender()).objectName()).split('_'))[1]
+        pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(btn))
+        btn = int(btn)
+
+        self.parent.lbl_partmap.show()
+        self.parent.lbl_partmap.setPixmap(pm)
+        self.parent.lbl_map.hide()
+        self.parent.hide_btn()
+        self.parent.btn_readypred.hide()
+        self.parent.btn_startpred.show()
+
+        temp_x = (btn % 12) if btn % 12 != 0 else 12
+        temp_y = (btn // 12) if temp_x == 12 else (btn // 12) + 1
+        self.parent.loc_up = col[temp_y - 1]
+        self.parent.loc_left = row[temp_x - 1]
+        loc = 'X_{}~{},Y_{}~{}'.format(self.parent.loc_left, self.parent.loc_left + 30, self.parent.loc_up - 30, self.parent.loc_up)
+        self.parent.status_num = 2
+        self.parent.model_loc = ''
+        for i in self.parent.model_data:
+            if loc in i:
+                print(i)
+                self.parent.model_loc = i
+                if self.parent.crawling_recent_data(self.parent.loc_up, self.parent.loc_up - 30, self.parent.loc_left, self.parent.loc_left + 30):
+                    self.parent.lbl_result.setText(loc + ' 위치의 모델과 자료를 찾았습니다.')
+                else:
+                    self.parent.lbl_result.setText(loc + ' 위치의 모델은 존재하지만 충분한 최근 데이터가 부족합니다.')
+                    self.parent.btn_startpred.hide()
+                break
         if self.parent.model_loc == '':
-            self.parent.lbl_result.setText(self.parent.loc + ' 위치의 표본이 부족하여 모델이 존재하지 않습니다.')
+            self.parent.lbl_result.setText(loc + ' 위치의 표본이 부족하여 모델이 존재하지 않습니다.')
             self.parent.btn_startpred.hide()
         self.parent.status_num = 6
         self.parent.lbl_load.hide()
@@ -166,32 +191,6 @@ class Exam(QMainWindow, form_window):
     def map_location_pick(self):
         self.activate_butten(False)
         self.lbl_result.setText('검색중..')
-        row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
-        col = [90, 60, 30, 0, -30, -60, -90]
-        btn = (((self.sender()).objectName()).split('_'))[1]
-        pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(btn))
-        btn = int(btn)
-
-        self.lbl_partmap.show()
-        self.lbl_partmap.setPixmap(pm)
-        self.lbl_map.hide()
-        self.hide_btn()
-        self.btn_readypred.hide()
-        self.btn_startpred.show()
-
-        temp_x = (btn % 12) if btn % 12 != 0 else 12
-        temp_y = (btn // 12) if temp_x == 12 else (btn // 12) + 1
-        self.loc_up = col[temp_y-1]
-        self.loc_left = row[temp_x-1]
-
-        self.loc = 'X_{}~{},Y_{}~{}'.format(self.loc_left, self.loc_left+30, self.loc_up-30, self.loc_up)
-        self.status_num = 2
-        self.model_loc = ''
-        for i in self.model_data:
-            if self.loc in i:
-                print(i)
-                self.model_loc = i
-                break
         self.load_logo('Bean_Eater')
         Start_crawling = start_crawling(self)
         Start_crawling.start()
