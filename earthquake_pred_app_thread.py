@@ -30,7 +30,7 @@ class start_crawling(QThread):  # 이미지 변경 및 크롤링 스레드
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
         print(self.parent.btn)
-        pm = QPixmap('./gui/cnew_split_map/cnew_map_{}.gif'.format(self.parent.btn))
+        pm = QPixmap('./gui/anew_split_map/anew_map_{}.gif'.format(self.parent.btn))
         btn = int(self.parent.btn)
 
         self.parent.lbl_partmap.show()
@@ -256,8 +256,7 @@ class Exam(QMainWindow, form_window):
         self.activate_butten(True)
 
     def activate_butten(self, switch):  # 버튼 활성화 / 비활성화
-        btn_list = [self.btn_back, self.btn_readypred, self.btn_startpred]
-        for i in btn_list:
+        for i in [self.btn_back, self.btn_readypred, self.btn_startpred]:
             i.setEnabled(switch)
 
     def closeEvent(self, QCloseEvent):  # 종료 이벤트
