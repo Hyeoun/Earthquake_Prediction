@@ -69,7 +69,7 @@ class run_status(QThread):  # 상태 표시줄 스레드
         super().__init__(parent)
         self.parent = parent
         self.working = True
-        self.status_str = '준비'
+        self.status_str = ''
     def run(self):
         while self.working:
             if self.parent.status_num == 0: self.status_str = 'Ready'
