@@ -74,21 +74,19 @@ class run_status(QThread):  # 상태 표시줄 스레드
         while self.working:
             if self.parent.status_num == 0: self.status_str = 'Ready'
             elif self.parent.status_num == 1: self.status_str = 'Location input ready'
-            elif self.parent.status_num == 2: self.status_str = 'Searching for model and location..'
+            elif self.parent.status_num == 2: self.status_str = 'Searching for model and location'
             elif self.parent.status_num == 3: self.status_str = 'Preprocessing'
-            elif self.parent.status_num == 4: self.status_str = 'Model run..'
+            elif self.parent.status_num == 4: self.status_str = 'Model run'
             elif self.parent.status_num == 5: self.status_str = 'Prediction done'
             elif self.parent.status_num == 6: self.status_str = 'Crawling and model search completed'
-            if self.parent.status_num in [2, 4]:
-                if self.parent.time_counter == 1: self.status_str = self.status_str + '..'
-                elif self.parent.time_counter == 2: self.status_str = self.status_str + '....'
+            if self.parent.status_num in [2, 4]: self.status_str = self.status_str + '..' * self.parent.time_counter
             self.parent.lbl_status.setText(self.status_str)
     def stop(self):
         self.working = False
         self.quit()
         self.wait(5)
 
-class three_time_count(QThread):  # 시간 스레드, 0 1 2만 표시된다.
+class five_time_count(QThread):  # 시간 스레드, 0 1 2 3 4만 표시된다.
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -96,9 +94,9 @@ class three_time_count(QThread):  # 시간 스레드, 0 1 2만 표시된다.
     def run(self):
         while self.working:
             self.parent.time_counter += 1
-            if self.parent.time_counter == 3:
+            if self.parent.time_counter == 5:
                 self.parent.time_counter = 0
-            time.sleep(1)
+            time.sleep(0.5)
 
     def stop(self):
         self.working = False
@@ -157,8 +155,8 @@ class Exam(QMainWindow, form_window):
         self.loc_up = 0
         self.loc_left = 0
         self.time_counter = 0
-        self.Three_time_count = three_time_count(self)
-        self.Three_time_count.start()
+        self.Five_time_count = five_time_count(self)
+        self.Five_time_count.start()
         self.Run_status = run_status(self)
         self.Run_status.start()
 
@@ -260,7 +258,7 @@ class Exam(QMainWindow, form_window):
         if ans == QMessageBox.Yes:
             driver.close()
             self.Run_status.stop()
-            self.Three_time_count.stop()
+            self.Five_time_count.stop()
             [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
             QCloseEvent.accept()
         else: QCloseEvent.ignore()
