@@ -22,7 +22,7 @@ driver = webdriver.Chrome('./chromedriver', options=options)
 form_window = uic.loadUiType('./earthquake_pred.ui')[0]
 form_loading = uic.loadUiType('./loading.ui')[0]
 
-class start_crawling(QThread):
+class start_crawling(QThread):  # 이미지 변경 및 크롤링 스레드
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -36,7 +36,7 @@ class start_crawling(QThread):
         self.parent.lbl_partmap.show()
         self.parent.lbl_partmap.setPixmap(pm)
         self.parent.lbl_map.hide()
-        self.parent.hide_btn()
+        self.parent.hide_btn(False)
         self.parent.btn_readypred.hide()
         self.parent.btn_startpred.show()
 
@@ -64,7 +64,7 @@ class start_crawling(QThread):
         self.parent.lbl_load.hide()
         self.parent.activate_butten(True)
 
-class run_status(QThread):
+class run_status(QThread):  # 상태 표시줄 스레드
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -88,7 +88,7 @@ class run_status(QThread):
         self.quit()
         self.wait(5)
 
-class three_time_count(QThread):
+class three_time_count(QThread):  # 시간 스레드, 0 1 2만 표시된다.
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -109,7 +109,7 @@ class three_time_count(QThread):
         self.quit()
         self.wait(5)
 
-class start_model(QThread):
+class start_model(QThread):  # 전처리 및 모델 예측 스레드
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -166,10 +166,10 @@ class Exam(QMainWindow, form_window):
         self.Run_status = run_status(self)
         self.Run_status.start()
 
-    def go_home(self):
+    def go_home(self):  # 메인으로 돌아갈때
         self.lbl_result.setText('Earthquake_prediction_2.3_ver')
         self.status_num = 0
-        self.hide_btn()
+        self.hide_btn(False)
         self.btn_back.hide()
         self.btn_readypred.show()
         self.btn_startpred.hide()
@@ -179,14 +179,13 @@ class Exam(QMainWindow, form_window):
         self.lbl_load.hide()
         [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
 
-    def ready_pred(self):
+    def ready_pred(self):  # 위치 지정
         self.lbl_result.setText('예측 위치를 정해주세요')
         self.status_num = 1
-        for i in self.btn_split_map_list:
-            i.show()
+        self.hide_btn(True)
         self.btn_back.show()
 
-    def map_location_pick(self):
+    def map_location_pick(self):  # 위치를 정했을때
         self.activate_butten(False)
         self.lbl_result.setText('모델 검색중..')
         self.load_logo('Bean_Eater')
@@ -195,7 +194,7 @@ class Exam(QMainWindow, form_window):
         Start_crawling.start()
 
 
-    def crawling_recent_data(self, up, down, left, right):
+    def crawling_recent_data(self, up, down, left, right):  # 크롤링 코드
         count_xpath = '/html/body/usgs-root/div/usgs-list/cdk-virtual-scroll-viewport/div[1]/usgs-search-results/div/span'
         ed_time = datetime.now()
         e_t = ed_time.strftime('%Y-%m-%d')
@@ -227,13 +226,13 @@ class Exam(QMainWindow, form_window):
         except: print('crawling error')
         return False
 
-    def preprocessing(self):
+    def preprocessing(self):  # 전처리 시작
         self.activate_butten(False)
         self.load_logo('Infinity')
         thread_model = start_model(self)
         thread_model.start()
 
-    def model_class(self, scaled_data):
+    def model_class(self, scaled_data):  # 모델 예측 및 위치 와 진도 표시
         self.status_num = 4
         scaled_data = scaled_data.reshape(-1, 100, 6)
         model = load_model(self.model_loc)
@@ -256,12 +255,12 @@ class Exam(QMainWindow, form_window):
         self.lbl_load.hide()
         self.activate_butten(True)
 
-    def activate_butten(self, switch):
+    def activate_butten(self, switch):  # 버튼 활성화 / 비활성화
         btn_list = [self.btn_back, self.btn_readypred, self.btn_startpred]
         for i in btn_list:
             i.setEnabled(switch)
 
-    def closeEvent(self, QCloseEvent):
+    def closeEvent(self, QCloseEvent):  # 종료 이벤트
         ans = QMessageBox.question(self, '종료', '종료할까요?', QMessageBox.No | QMessageBox.Yes, QMessageBox.Yes)
         if ans == QMessageBox.Yes:
             driver.close()
@@ -271,16 +270,17 @@ class Exam(QMainWindow, form_window):
             QCloseEvent.accept()
         else: QCloseEvent.ignore()
 
-    def load_logo(self, name):
+    def load_logo(self, name):  # 로딩 gif 파일 선택 후 실행
         self.movie = QMovie('./gui/{}.gif'.format(name), QByteArray(), self)
         self.movie.setCacheMode(QMovie.CacheAll)
         self.lbl_load.setMovie(self.movie)
         self.movie.start()
         self.lbl_load.show()
 
-    def hide_btn(self):
+    def hide_btn(self, flag):  # 지도 버튼 숨기기
         for i in self.btn_split_map_list:
-            i.hide()
+            if flag: i.show()
+            else: i.hide()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
