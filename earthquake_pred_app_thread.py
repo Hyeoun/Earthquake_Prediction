@@ -94,8 +94,7 @@ class five_time_count(QThread):  # 시간 스레드, 0 1 2 3 4만 표시된다.
     def run(self):
         while self.working:
             self.parent.time_counter += 1
-            if self.parent.time_counter == 5:
-                self.parent.time_counter = 0
+            if self.parent.time_counter == 5: self.parent.time_counter = 0
             time.sleep(0.5)
 
     def stop(self):
@@ -148,7 +147,6 @@ class Exam(QMainWindow, form_window):
         self.btn_back.clicked.connect(self.go_home)
         for i in self.btn_split_map_list:
             i.clicked.connect(self.map_location_pick)
-        self.status_num = 0
         self.go_home()
         self.setFixedSize(817, 629)
         self.model_loc = ''
