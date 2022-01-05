@@ -93,16 +93,12 @@ class three_time_count(QThread):  # 시간 스레드, 0 1 2만 표시된다.
         super().__init__(parent)
         self.parent = parent
         self.working = True
-        self.in_time = 0
     def run(self):
         while self.working:
-            self.in_time += 0.1
-            self.in_time = round(self.in_time, 1)
-            if self.in_time % 1 == 0:
-                self.parent.time_counter = int(self.in_time)
+            self.parent.time_counter += 1
             if self.parent.time_counter == 3:
-                self.in_time, self.parent.time_counter = 0, 0
-            time.sleep(0.1)
+                self.parent.time_counter = 0
+            time.sleep(1)
 
     def stop(self):
         self.working = False
