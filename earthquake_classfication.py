@@ -16,10 +16,15 @@ for i in data_paths:
 
         model = Sequential()
         model.add(LSTM(128, input_shape = (te, 6), activation = 'tanh'))
+        model.add(Dropout(0.2))
+        model.add(Dense(64, activation='tanh'))
+        model.add(Dropout(0.1))
+        model.add(Dense(32, activation='tanh'))
+        model.add(Dropout(0.05))
         model.add(Flatten())
 
-        model.add(Dense(6))  # 값을 예측할때는 출력에 활성화 함수를 넣지 않는다.
-        early_stopping = EarlyStopping(monitor='val_loss', patience=5)
+        model.add(Dense(6))  # 값을 출력할때는 출력에 활성화 함수를 넣지 않는다.
+        early_stopping = EarlyStopping(monitor='val_loss', patience=7)
         model.compile(loss = 'mse', optimizer = 'adam')
         model.summary()
 

@@ -139,7 +139,7 @@ class Exam(QMainWindow, form_window):
                               self.btn_51, self.btn_52, self.btn_53, self.btn_54, self.btn_55, self.btn_56, self.btn_57, self.btn_58, self.btn_59, self.btn_60,
                               self.btn_61, self.btn_62, self.btn_63, self.btn_64, self.btn_65, self.btn_66, self.btn_67, self.btn_68, self.btn_69, self.btn_70,
                               self.btn_71, self.btn_72]
-        self.model_data = glob.glob('./models/*')
+        self.model_data = glob.glob('./models/*.h5')
         with open('./datasets/earthquake_minmaxscaler.pickle', 'rb') as f:
             self.scaler = pickle.load(f)
         self.btn_readypred.clicked.connect(self.ready_pred)
