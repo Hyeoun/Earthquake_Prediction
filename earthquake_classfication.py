@@ -29,7 +29,7 @@ for i in data_paths:
         model.summary()
 
         fit_hist = model.fit(X_train, Y_train, epochs=50, validation_data=(X_test, Y_test), shuffle = False, callbacks=[early_stopping], verbose=1)
-        if temp == 'X_120~150,Y_30~60':
+        if temp == 'X_120~150,Y_30~60':  # plt 출력 부분
             plt.plot(fit_hist.history['loss'][-500:], label = 'loss')
             plt.plot(fit_hist.history['val_loss'][-500:], label = 'val_loss')
             plt.legend()

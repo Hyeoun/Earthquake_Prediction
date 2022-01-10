@@ -28,7 +28,7 @@ for a in range(len(row)-1):
 
             left_down = list(left_down[0])
             right_up = list(right_up[0])
-
+            # 전처리 범위 정하기
             df_location = scaled_df[(left_down[1] <= scaled_df['longitude']) & (scaled_df['longitude'] <= right_up[1]) & (left_down[0] <= scaled_df['latitude']) & (scaled_df['latitude'] <= right_up[0])]
             data_location = df_location.to_numpy()
             print(data_location.shape)

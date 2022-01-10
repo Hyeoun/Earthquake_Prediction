@@ -25,12 +25,12 @@ form_loading = uic.loadUiType('./loading.ui')[0]
 class start_crawling(QThread):  # 이미지 변경 및 크롤링 스레드
     def __init__(self, parent):
         super().__init__(parent)
-        self.parent = parent
+        self.parent = parent  # 메인에서 지정된 self변수를 스레드에서 사용할 수 있게 parent로 접근
     def run(self):
         row = [-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
         col = [90, 60, 30, 0, -30, -60, -90]
         print(self.parent.btn)
-        pm = QPixmap('./gui/anew_split_map/anew_map_{}.gif'.format(self.parent.btn))
+        pm = QPixmap('./gui/anew_split_map/anew_map_{}.gif'.format(self.parent.btn))  # 라벨에 이미지 불러오기
         btn = int(self.parent.btn)
 
         self.parent.lbl_partmap.show()
@@ -130,7 +130,7 @@ class Exam(QMainWindow, form_window):
     def __init__(self): # 버튼 누르는 함수 처리해 주는 곳
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle('Earthquake_prediction_2.3_ver')
+        self.setWindowTitle('Earthquake_prediction_2.3_ver')  # 타이틀 지정
         self.btn_split_map_list = [self.btn_01, self.btn_02, self.btn_03, self.btn_04, self.btn_05, self.btn_06, self.btn_07, self.btn_08, self.btn_09, self.btn_10,
                               self.btn_11, self.btn_12, self.btn_13, self.btn_14, self.btn_15, self.btn_16, self.btn_17, self.btn_18, self.btn_19, self.btn_20,
                               self.btn_21, self.btn_22, self.btn_23, self.btn_24, self.btn_25, self.btn_26, self.btn_27, self.btn_28, self.btn_29, self.btn_30,
@@ -148,13 +148,13 @@ class Exam(QMainWindow, form_window):
         for i in self.btn_split_map_list:
             i.clicked.connect(self.map_location_pick)
         self.go_home()
-        self.setFixedSize(817, 629)
+        self.setFixedSize(817, 629)  # 창 크기 고정
         self.model_loc = ''
         self.loc_up = 0
         self.loc_left = 0
         self.time_counter = 0
         self.Five_time_count = five_time_count(self)
-        self.Five_time_count.start()
+        self.Five_time_count.start()  # 스레드 시작
         self.Run_status = run_status(self)
         self.Run_status.start()
 
@@ -169,7 +169,7 @@ class Exam(QMainWindow, form_window):
         self.lbl_map.show()
         self.lbl_partmap.hide()
         self.lbl_load.hide()
-        [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
+        [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]  # 해당 위치의 csv파일을 전부 삭제한다.
 
     def ready_pred(self):  # 위치 지정
         self.lbl_result.setText('예측 위치를 정해주세요')
@@ -181,7 +181,7 @@ class Exam(QMainWindow, form_window):
         self.activate_butten(False)
         self.lbl_result.setText('모델 검색중..')
         self.load_logo('Bean_Eater')
-        self.btn = (((self.sender()).objectName()).split('_'))[1]
+        self.btn = (((self.sender()).objectName()).split('_'))[1]  # 눌린 버튼이 뭔지 확인
         Start_crawling = start_crawling(self)
         Start_crawling.start()
 
@@ -229,19 +229,19 @@ class Exam(QMainWindow, form_window):
         scaled_data = scaled_data.reshape(-1, 100, 6)
         model = load_model(self.model_loc)
         print(scaled_data.shape)
-        next_eq_pred = model.predict(scaled_data)
-        next_eq_pred = self.scaler.inverse_transform(next_eq_pred)
-        next_eq_pred = (next_eq_pred.tolist())[0]
+        next_eq_pred = model.predict(scaled_data)  # 모델 예측
+        next_eq_pred = self.scaler.inverse_transform(next_eq_pred)  # 역 스케일링
+        next_eq_pred = (next_eq_pred.tolist())[0]  # 괄호 하나를 벗긴다.
         X = next_eq_pred[1]
         Y = next_eq_pred[0]
         M = next_eq_pred[3]
-        qt_cs = round(7 * M, 0)
-        qt_mx = round((310 / 30) * (X - self.loc_left) - qt_cs / 2, 0)
-        qt_my = round((401 / 30) * (self.loc_up - Y) - qt_cs / 2, 0)
+        qt_cs = round(7 * M, 0)  # 점 크기
+        qt_mx = round((310 / 30) * (X - self.loc_left) - qt_cs / 2, 0)  # x좌표 이동 수식
+        qt_my = round((401 / 30) * (self.loc_up - Y) - qt_cs / 2, 0)  # y좌표 이동 수식
         self.lbl_result.setText('다음 지진은 위도 {}, 경도 {}, 깊이 {}km 지점에 규모 {}이(가) 예상됩니다.\n(북위 : +, 남위 : -, 서경 : -, 동경 : +)'.format(round(Y, 2), round(X, 2), round(next_eq_pred[2], 2), round(M, 1)))
         self.lbl_reddot.show()
-        self.lbl_reddot.move(185 + qt_mx, 20 + qt_my)
-        self.lbl_reddot.setFixedSize(qt_cs, qt_cs)
+        self.lbl_reddot.move(185 + qt_mx, 20 + qt_my)  # 점 이동
+        self.lbl_reddot.setFixedSize(qt_cs, qt_cs)  # 점 크기 지정
         [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
         self.status_num = 5
         self.lbl_load.hide()
@@ -255,7 +255,7 @@ class Exam(QMainWindow, form_window):
         ans = QMessageBox.question(self, '종료', '종료할까요?', QMessageBox.No | QMessageBox.Yes, QMessageBox.Yes)
         if ans == QMessageBox.Yes:
             driver.close()
-            self.Run_status.stop()
+            self.Run_status.stop()  # 스레트 정지
             self.Five_time_count.stop()
             [os.remove(f) for f in glob.glob('C:Users/ing02/Downloads/*.csv')]
             QCloseEvent.accept()

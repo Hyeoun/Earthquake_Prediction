@@ -18,7 +18,7 @@ df.sort_values(by='time', ascending=True, inplace=True)
 df.info()
 df.set_index('time', inplace=True)
 
-# fig = plt.figure(figsize=(7.44,4))
+# fig = plt.figure(figsize=(7.44,4))  # 전체 지진 좌표 출력
 # ax = fig.add_axes([0,0,1,1])  # 전체 figure 전부 활용
 # ax.plot(df['longitude'], df['latitude'], '.', markersize=0.7, alpha=0.3, color='#ff5555')
 # plt.show()
