@@ -80,7 +80,7 @@ class run_status(QThread):  # 상태 표시줄 스레드
             elif self.parent.status_num == 6: self.status_str = 'Crawling and model search completed'
             if self.parent.status_num in [2, 4]: self.status_str = self.status_str + '..' * self.parent.time_counter
             self.parent.lbl_status.setText(self.status_str)
-    def stop(self):
+    def stop(self):  # stop을 사용하려면 스레드에 이 함수를 추가한다.
         self.working = False
         self.quit()
         self.wait(5)
