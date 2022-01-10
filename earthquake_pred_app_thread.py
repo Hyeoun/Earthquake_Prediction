@@ -189,13 +189,13 @@ class Exam(QMainWindow, form_window):
     def crawling_recent_data(self, up, down, left, right):  # 크롤링 코드
         count_xpath = '/html/body/usgs-root/div/usgs-list/cdk-virtual-scroll-viewport/div[1]/usgs-search-results/div/span'
         ed_time = datetime.now()
-        e_t = ed_time.strftime('%Y-%m-%d')
+        e_t = ed_time.strftime('%Y-%m-%d')  # 현재 시각을 문자열로 해당 포맷에 맞게 표시
         de = 60
         t = 4
         self.lbl_result.setText('크롤러가 자료를 수집하고 있습니다.')
         try:
             while True:
-                st_time = (ed_time + timedelta(days=-de)).strftime('%Y-%m-%d')
+                st_time = (ed_time + timedelta(days=-de)).strftime('%Y-%m-%d')  # 시작시간 지정
                 url = 'https://earthquake.usgs.gov/earthquakes/map/?extent=12.89749,-175.78125&extent=68.56038,-35.15625&range=search&map=false&search=%7B%22name%22:%22Search%20Results%22,%22params%22:%7B%22starttime%22:%22{}%2000:00:00%22,%22endtime%22:%22{}%2023:59:59%22,%22maxlatitude%22:{},%22minlatitude%22:{},%22maxlongitude%22:{},%22minlongitude%22:{},%22minmagnitude%22:0.5,%22eventtype%22:%22earthquake%22,%22orderby%22:%22time%22%7D%7D'.format(
                     st_time, e_t, up, down, right, left)
                 driver.get(url)
