@@ -20,7 +20,6 @@ options.add_argument('disable_gpu')
 driver = webdriver.Chrome('./chromedriver', options=options)
 
 form_window = uic.loadUiType('./earthquake_pred.ui')[0]
-form_loading = uic.loadUiType('./loading.ui')[0]
 
 class start_crawling(QThread):  # 이미지 변경 및 크롤링 스레드
     def __init__(self, parent):
